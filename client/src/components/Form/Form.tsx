@@ -3,7 +3,7 @@ import useStyles from "./styles";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost } from "../../reducers/postReducer";
+import { createPost, Post, updatePost } from "../../reducers/postReducer";
 import { RootState } from "../../store";
 
 type FormProps = {
@@ -13,12 +13,14 @@ type FormProps = {
 
 const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
-  const [postData, setPostData] = useState<any>({
+  const [postData, setPostData] = useState<
+    Omit<Post, "likeCount" | "createdAt">
+  >({
     _id: "",
     creator: "",
     title: "",
     message: "",
-    tags: "",
+    tags: [""],
     selectedFile: "",
   });
   // dispatch CREATE Action.type
@@ -28,9 +30,11 @@ const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
   );
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    if (currentId) {
+    if (currentId !== null) {
       dispatch(updatePost(currentId, postData));
     } else {
+      console.log(postData);
+
       dispatch(createPost(postData));
     }
     clear();
@@ -46,7 +50,7 @@ const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
       creator: "",
       title: "",
       message: "",
-      tags: "",
+      tags: [""],
       selectedFile: "",
     });
   };
@@ -100,7 +104,7 @@ const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
           fullWidth
           value={postData.tags}
           onChange={(e) => {
-            setPostData({ ...postData, tags: e.target.value });
+            setPostData({ ...postData, tags: e.target.value.split(",") });
           }}
         />
         <div className={classes.fileInput}>

@@ -10,20 +10,28 @@ import {
 } from "@material-ui/core";
 import { MoreHoriz, Delete, ThumbUpAlt } from "@material-ui/icons";
 import moment from "moment";
-import { deletePost, getPosts, Post } from "../../../reducers/postReducer";
+import {
+  deletePost,
+  getPosts,
+  Post,
+  updatePostLikeCount,
+} from "../../../reducers/postReducer";
 import { useDispatch } from "react-redux";
-import { AppDispatch, store } from "../../../store";
 
 type DefaultProps = {
   postData: Post;
   setCurrentId: React.Dispatch<any>;
 };
-const Post: React.FC<DefaultProps> = ({ postData, setCurrentId }) => {
+const Post = ({ postData, setCurrentId }: DefaultProps) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const handleDelete = () => {
     dispatch(deletePost(postData._id));
+  };
+
+  const handleUpdateLikeCount = () => {
+    dispatch(updatePostLikeCount(postData._id));
   };
 
   return (
@@ -55,16 +63,18 @@ const Post: React.FC<DefaultProps> = ({ postData, setCurrentId }) => {
       </div>
       <div className={classes.details}>
         <Typography variant="body2">
-          {postData.tags.map((tag: any) => `#${tag}`)}
+          {postData.tags !== undefined
+            ? postData.tags.map((tag: any) => `#${tag} `)
+            : ""}
         </Typography>
       </div>
       <div>
-        <CardContent>
+        <CardContent id="title_message_card">
           <Typography variant="h6">{postData.title}</Typography>
-          <Typography variant="h6">{postData.message}</Typography>
+          <Typography variant="subtitle1">{postData.message}</Typography>
         </CardContent>
-        <CardActions className={classes.cardActions}>
-          <Button size="small" color="primary" onClick={() => {}}>
+        <CardActions id="thumbUp" className={classes.cardActions}>
+          <Button size="small" color="primary" onClick={handleUpdateLikeCount}>
             <ThumbUpAlt fontSize="small" />
             Like
             {postData.likeCount}

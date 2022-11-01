@@ -11,7 +11,7 @@ export const post = {
   tags: [""],
   selectedFile: "",
   likeCount: 0,
-  createdAt: Date().toString(),
+  createdAt: new Date().toString(),
 };
 
 interface InitialState {
@@ -34,6 +34,7 @@ const POSTS_FETCH_ALL_REJECTED_ACTION = "POSTS/FETCH_ALL/rejected";
 const POSTS_CREATE_ACTION = "POSTS/CREATE";
 const POSTS_UPDATE_ACTION = "POSTS/UPDATE";
 const POSTS_DELETE_ACTION = "POSTS/DELETE";
+const POSTS_UPDATE_LIKE_ACTION = "POSTS/UPDATE/LIKE";
 
 // Interfaces
 interface fetchAction
@@ -54,15 +55,20 @@ interface updateAction extends Action<typeof POSTS_UPDATE_ACTION> {
 }
 
 interface deleteAction extends Action<typeof POSTS_DELETE_ACTION> {
-  payload: String;
+  payload: string;
 }
+interface updateLikeAction extends Action<typeof POSTS_UPDATE_LIKE_ACTION> {
+  payload: Post;
+}
+
+POSTS_UPDATE_LIKE_ACTION;
 
 // Action types
 const postsFetchAllPending = () => ({
-  type: POSTS_FETCH_ALL_REJECTED_ACTION,
+  type: POSTS_FETCH_ALL_PENDING_ACTION,
 });
 const postsFetchAllRejected = (error: any) => ({
-  type: POSTS_FETCH_ALL_PENDING_ACTION,
+  type: POSTS_FETCH_ALL_REJECTED_ACTION,
   payload: error,
 });
 const postsFetchAllFulfilled = (data: Post[]) => ({
@@ -80,7 +86,7 @@ const postUpdate = (data: Post[]) => ({
   payload: data,
 });
 
-const postDelete = (data: String) => ({
+const postDelete = (data: string) => ({
   type: POSTS_DELETE_ACTION,
   payload: data,
 });
@@ -94,9 +100,8 @@ export const getPosts =
     try {
       const { data } = await api.getAllPosts();
       dispatch(postsFetchAllFulfilled(data));
-      console.log(data);
     } catch (error) {
-      dispatch(postsFetchAllRejected(error));
+      postsFetchAllRejected(error);
     }
   };
 
@@ -109,7 +114,7 @@ export const createPost = (
       const { data } = await api.createPosts(post);
       dispatch(postCreate(data));
     } catch (error) {
-      dispatch(postCreate(error));
+      console.log(error);
     }
   };
 };
@@ -124,7 +129,21 @@ export const updatePost = (
       const { data } = await api.updatePostById(id, post);
       dispatch(postUpdate(data));
     } catch (error) {
-      dispatch(postUpdate(error));
+      console.log(error);
+    }
+  };
+};
+
+// Action to call by event
+export const updatePostLikeCount = (
+  id: any
+): ThunkAction<Promise<void>, InitialState, undefined, updateLikeAction> => {
+  return async (dispatch: any) => {
+    try {
+      const { data } = await api.updatePostLikeCount(id);
+      dispatch(postUpdate(data));
+    } catch (error) {
+      console.log(error);
     }
   };
 };
@@ -137,14 +156,19 @@ export const deletePost = (
       await api.deletePostById(id);
       dispatch(postDelete(id));
     } catch (error) {
-      dispatch(postDelete(error));
+      console.log(error);
     }
   };
 };
 
 export default (
-  state = initialState,
-  action: fetchAction | createAction | updateAction | deleteAction
+  state = JSON.parse(JSON.stringify(initialState)) as InitialState,
+  action:
+    | fetchAction
+    | createAction
+    | updateAction
+    | deleteAction
+    | updateLikeAction
 ): InitialState => {
   switch (action.type) {
     case POSTS_FETCH_ALL_PENDING_ACTION:
@@ -172,6 +196,7 @@ export default (
         error: state.error,
       };
     case POSTS_UPDATE_ACTION:
+    case POSTS_UPDATE_LIKE_ACTION:
       return {
         data: state.data.map((post) =>
           post._id === action.payload._id ? action.payload : post
@@ -185,6 +210,7 @@ export default (
         isLoading: false,
         error: state.error,
       };
+
     default:
       return state;
   }

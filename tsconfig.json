@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "module": "commonjs",
+    "module": "CommonJS",
     "noImplicitAny": true,
     "outDir": "client/dist/",
+    "moduleResolution": "node",
     "noEmit": false,
     "preserveConstEnums": true,
     "removeComments": true,
@@ -13,7 +14,7 @@
     "allowSyntheticDefaultImports": true,
   },
   "include": [
-    "**/*"
+    "**/src"
   ],
-  "exclude": ["dist", "build", "node_modules"]
+  "exclude": ["dist", "build"]
 }

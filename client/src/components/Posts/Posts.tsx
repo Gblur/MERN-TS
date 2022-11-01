@@ -17,7 +17,6 @@ const Posts: React.FC<DefaultProps> = ({ setCurrentId }) => {
   const posts = useSelector((state: RootState) => state.posts.data);
   const isLoading = useSelector((state: RootState) => state.posts.isLoading);
 
-  console.log(isLoading);
 
   return isLoading ? (
     <CircularProgress />
