@@ -4,7 +4,7 @@ import * as api from "../api";
 
 export type Post = typeof post;
 export const post = {
-  _id: "",
+  _id: 0,
   creator: "",
   title: "",
   message: "",
@@ -55,7 +55,7 @@ interface updateAction extends Action<typeof POSTS_UPDATE_ACTION> {
 }
 
 interface deleteAction extends Action<typeof POSTS_DELETE_ACTION> {
-  payload: string;
+  payload: number;
 }
 interface updateLikeAction extends Action<typeof POSTS_UPDATE_LIKE_ACTION> {
   payload: Post;
