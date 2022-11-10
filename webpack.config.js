@@ -1,6 +1,9 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 const __dirname = path.dirname(".");
+import webpack from "webpack";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function (env, argv) {
   const config = {
@@ -44,6 +47,9 @@ export default function (env, argv) {
     plugins: [
       new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "./client/src", "index.html"),
+      }),
+      new webpack.DefinePlugin({
+        "process.env": JSON.stringify(process.env),
       }),
     ],
     performance: {},

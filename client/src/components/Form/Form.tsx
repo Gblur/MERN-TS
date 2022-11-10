@@ -7,7 +7,7 @@ import { createPost, Post, updatePost } from "../../reducers/postReducer";
 import { RootState } from "../../store";
 
 type FormProps = {
-  currentId: number;
+  currentId: null;
   setCurrentId: React.Dispatch<any>;
 };
 
@@ -16,7 +16,7 @@ const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState<
     Omit<Post, "likeCount" | "createdAt">
   >({
-    _id: 0,
+    _id: null,
     creator: "",
     title: "",
     message: "",
@@ -46,7 +46,7 @@ const Form: React.FC<FormProps> = ({ currentId, setCurrentId }) => {
   const clear = () => {
     setCurrentId(null);
     setPostData({
-      _id: 0,
+      _id: null,
       creator: "",
       title: "",
       message: "",

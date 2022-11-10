@@ -1,18 +1,30 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export default makeStyles(() => ({
-  appBar: {
-    borderRadius: 15,
-    margin: "30px 0",
+export default makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: "column",
     alignItems: "center",
+    padding: theme.spacing(2),
   },
-  heading: {
-    color: "rgba(0,183,255, 1)",
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+    },
   },
-  image: {
-    marginLeft: "15px",
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  googleButton: {
+    marginBottom: theme.spacing(2),
   },
 }));

@@ -1,22 +1,22 @@
 // Components
 import React, { useEffect, useState } from "react";
-import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
+import { Container, Typography, Grow, Grid } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-// Assets
 import memories from "./images/memories.png";
-// Stylesheets
-import useStyles from "./styles";
 
 // Custom Components
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // Actions
 import { getPosts } from "./reducers/postReducer";
+import Navbar from "./components/Navbar/Navbar";
+import Auth from "./components/Auth/Auth";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
-  const [currentId, setCurrentId] = useState(0);
-  const classes = useStyles();
+  const [currentId, setCurrentId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,36 +24,45 @@ function App() {
   }, [currentId, dispatch]);
 
   return (
-    <Container maxWidth="lg" fixed>
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography className={classes.heading} variant="h2" align="center">
-          Memories
-        </Typography>
-        <img
-          className={classes.image}
-          src={memories}
-          alt="memories"
-          height="60"
-        />
-      </AppBar>
-      <Grow in>
-        <Container>
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item xs={12} sm={7}>
-              <Posts setCurrentId={setCurrentId} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Form currentId={currentId} setCurrentId={setCurrentId} />
-            </Grid>
-          </Grid>
+    // <React.StrictMode>
+    <GoogleOAuthProvider
+      clientId={`${process.env.PUBLIC_GOOGLE_OAUTH_CLIENT_ID}`}
+    >
+      <BrowserRouter>
+        <Container maxWidth="lg" fixed>
+          <Navbar />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Grow in>
+                  <Container>
+                    <Grid
+                      container
+                      justifyContent="space-between"
+                      alignItems="stretch"
+                      spacing={2}
+                    >
+                      <Grid item xs={12} sm={7}>
+                        <Posts setCurrentId={setCurrentId} />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <Form
+                          currentId={currentId}
+                          setCurrentId={setCurrentId}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Container>
+                </Grow>
+              }
+            />
+            <Route path="/auth" element={<Auth />}></Route>
+          </Routes>
         </Container>
-      </Grow>
-    </Container>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+    // </React.StrictMode>
   );
 }
 

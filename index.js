@@ -5,7 +5,7 @@ import db from "./db/index.js";
 import router from "./routes/post-router.js";
 
 const app = express();
-const apiPort = 3000;
+const apiPort = 9000;
 
 app.use(cors());
 app.use(bodyparser.json({ limit: "50mb" }));
@@ -23,7 +23,7 @@ db.once("open", () => {
 });
 db.set("useFindAndModify", false);
 
-// .ASP [<default route>] 
+// .ASP [<default route>]
 app.use("/api", router);
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
